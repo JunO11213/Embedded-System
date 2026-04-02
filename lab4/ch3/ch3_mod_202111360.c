@@ -24,49 +24,65 @@ spinlock_t my_lock;
 static dev_t dev_num;
 static struct cdev *cd_cdev;
 
+static int ch3_read(struct msg_st *user_buf) {
+    struct msg_list *first_node;
+    struct msg_st temp_msg;
+    int ret;
+
+    spin_lock(&my_lock);
+    
+    if (list_empty(&msg_list_head.list)) {
+        spin_unlock(&my_lock);
+        
+        memset(&temp_msg, 0, sizeof(struct msg_st));
+        temp_msg.str[0] = '0';
+        temp_msg.str[1] = '\0';
+        
+        ret = copy_to_user(user_buf, &temp_msg, sizeof(struct msg_st));
+    } 
+    else {
+        first_node = list_entry(msg_list_head.list.next, struct msg_list, list);
+        memcpy(&temp_msg, first_node->msg, sizeof(struct msg_st));
+        
+        list_del(&first_node->list);
+        spin_unlock(&my_lock);
+
+        ret = copy_to_user(user_buf, &temp_msg, sizeof(struct msg_st));
+
+        kfree(first_node->msg);
+        kfree(first_node);
+    }
+    
+    return ret;
+}
+
+static int ch3_write(struct msg_st *user_buf) {
+    struct msg_list *new_node;
+    int ret;
+
+    new_node = (struct msg_list *)kmalloc(sizeof(struct msg_list), GFP_KERNEL);
+    new_node->msg = (struct msg_st *)kmalloc(sizeof(struct msg_st), GFP_KERNEL);
+
+    ret = copy_from_user(new_node->msg, user_buf, sizeof(struct msg_st));
+
+    spin_lock(&my_lock);
+    list_add_tail(&new_node->list, &msg_list_head.list);
+    spin_unlock(&my_lock);
+
+    return ret;
+}
+
 static long ch3_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     struct msg_st *user_buf = (struct msg_st *)arg;
-    struct msg_list *new_node, *first_node;
-    struct msg_st temp_msg; 
-    unsigned long ret; // 컴파일러 경고(warning)를 없애기 위한 변수
+    int ret;
 
     switch(cmd) {
         case CH3_IOCTL_READ:
-            spin_lock(&my_lock);
-            
-            if (list_empty(&msg_list_head.list)) {
-                spin_unlock(&my_lock);
-
-                memset(&temp_msg, 0, sizeof(struct msg_st));
-                temp_msg.str[0] = '0';
-                temp_msg.str[1] = '\0';
-                
-                // 리턴값을 ret에 받아주어 경고 메시지를 제거합니다.
-                ret = copy_to_user(user_buf, &temp_msg, sizeof(struct msg_st));
-            } else {
-                first_node = list_entry(msg_list_head.list.next, struct msg_list, list);
-                
-                memcpy(&temp_msg, first_node->msg, sizeof(struct msg_st));
-                
-                list_del(&first_node->list);
-                spin_unlock(&my_lock);
-
-                ret = copy_to_user(user_buf, &temp_msg, sizeof(struct msg_st));
-
-                kfree(first_node->msg);
-                kfree(first_node);
-            }
+            ret = ch3_read(user_buf);
             break;
 
         case CH3_IOCTL_WRITE:
-            new_node = (struct msg_list *)kmalloc(sizeof(struct msg_list), GFP_KERNEL);
-            new_node->msg = (struct msg_st *)kmalloc(sizeof(struct msg_st), GFP_KERNEL);
-
-            ret = copy_from_user(new_node->msg, user_buf, sizeof(struct msg_st));
-
-            spin_lock(&my_lock);
-            list_add_tail(&new_node->list, &msg_list_head.list);
-            spin_unlock(&my_lock);
+            ret = ch3_write(user_buf);
             break;
     }
     return 0;
@@ -84,10 +100,9 @@ static int __init ch3_init(void) {
     cd_cdev = cdev_alloc();
     cdev_init(cd_cdev, &ch3_fops);
 
-    // 🚨 해결된 부분: 커널에 디바이스를 최종 등록하는 코드를 추가했습니다!
     err = cdev_add(cd_cdev, dev_num, 1);
     if (err < 0) {
-        printk(KERN_ERR "ch3_mod: fail to add character device\n");
+        printk(KERN_ERR "ch3_mod fail\n");
         return err;
     }
 
