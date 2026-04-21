@@ -51,7 +51,7 @@ static int __init simple_char_init(void){
     alloc_chrdev_region(&dev_num, 0, 1, DEV_NAME);
     cd_cdev = cdev_alloc();
     cdev_init(cd_cdev, &simple_char_fops);
-    cdev_add(cd_cdev, dev_num, 1);
+    cdev_add(cd_cdev, dev_num, 1); 
 
     return 0;
 }
