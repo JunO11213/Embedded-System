@@ -29,10 +29,15 @@ __attribute__((section("__versions"))) = {
 	{ 0x2b68bd2f, "del_timer" },
 	{ 0x24d273d1, "add_timer" },
 	{ 0xc6f46339, "init_timer_key" },
+	{ 0xfe990052, "gpio_free" },
+	{ 0x403f9529, "gpio_request_one" },
 	{ 0x2e5810c6, "__aeabi_unwind_cpp_pr1" },
 	{ 0xc38c83b8, "mod_timer" },
-	{ 0x7c32d0f0, "printk" },
 	{ 0x526c3a6c, "jiffies" },
+	{ 0x7c32d0f0, "printk" },
+	{ 0xffb0dcd9, "gpiod_set_raw_value" },
+	{ 0x16e02b99, "gpiod_get_raw_value" },
+	{ 0x350a004, "gpio_to_desc" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 };
 
@@ -42,4 +47,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "2CA5C2E5ECA717A05AFCEEC");
+MODULE_INFO(srcversion, "596E6532D355C6AEFDB9804");
