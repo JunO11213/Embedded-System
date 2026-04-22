@@ -1,1 +1,0 @@
-cmd_/home/june/class/lab6/ch6/ch6_mod_202111360.ko := /usr/bin/arm-linux-gnueabi-ld -r -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /home/june/class/lab6/ch6/ch6_mod_202111360.ko /home/june/class/lab6/ch6/ch6_mod_202111360.o /home/june/class/lab6/ch6/ch6_mod_202111360.mod.o ;  true
