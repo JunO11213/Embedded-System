@@ -1,0 +1,1 @@
+cmd_/home/june/class/lab9/ex2/simple_rcu.ko := /usr/bin/arm-linux-gnueabi-ld -r -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /home/june/class/lab9/ex2/simple_rcu.ko /home/june/class/lab9/ex2/simple_rcu.o /home/june/class/lab9/ex2/simple_rcu.mod.o ;  true
