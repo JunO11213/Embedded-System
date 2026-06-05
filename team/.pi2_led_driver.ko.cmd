@@ -1,0 +1,1 @@
+cmd_/home/june/class/team/pi2_led_driver.ko := /usr/bin/arm-linux-gnueabi-ld -r -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /home/june/class/team/pi2_led_driver.ko /home/june/class/team/pi2_led_driver.o /home/june/class/team/pi2_led_driver.mod.o ;  true

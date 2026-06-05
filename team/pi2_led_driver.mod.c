@@ -26,21 +26,28 @@ static const struct modversion_info ____versions[]
 __used
 __attribute__((section("__versions"))) = {
 	{ 0xad1a7def, "module_layout" },
-	{ 0x8c03d20c, "destroy_workqueue" },
-	{ 0x42160169, "flush_workqueue" },
+	{ 0xb7700415, "param_ops_int" },
+	{ 0x38ef651b, "device_destroy" },
+	{ 0xe30a435, "class_destroy" },
+	{ 0x765f4408, "device_create" },
+	{ 0x1d11aa3a, "cdev_del" },
+	{ 0xd15f066d, "__class_create" },
+	{ 0x6091b333, "unregister_chrdev_region" },
+	{ 0x88647e86, "cdev_add" },
+	{ 0x7a3acc89, "cdev_init" },
+	{ 0xe3ec2f2b, "alloc_chrdev_region" },
 	{ 0xfe990052, "gpio_free" },
-	{ 0xc1514a3b, "free_irq" },
-	{ 0xd6b8e852, "request_threaded_irq" },
-	{ 0x72c365ef, "gpiod_to_irq" },
+	{ 0xe31620ea, "gpiod_direction_output_raw" },
+	{ 0x47229b5c, "gpio_request" },
+	{ 0xf4fa543b, "arm_copy_to_user" },
+	{ 0x8f678b07, "__stack_chk_guard" },
+	{ 0xdb7305a1, "__stack_chk_fail" },
+	{ 0x67ea780, "mutex_unlock" },
+	{ 0xffb0dcd9, "gpiod_set_raw_value" },
 	{ 0x350a004, "gpio_to_desc" },
-	{ 0x403f9529, "gpio_request_one" },
-	{ 0x43a53735, "__alloc_workqueue_key" },
-	{ 0xb2d48a2e, "queue_work_on" },
-	{ 0x8899dc97, "kmem_cache_alloc_trace" },
-	{ 0x61a76852, "kmalloc_caches" },
+	{ 0xc271c3be, "mutex_lock" },
+	{ 0x28cc25db, "arm_copy_from_user" },
 	{ 0x2e5810c6, "__aeabi_unwind_cpp_pr1" },
-	{ 0x37a0cba, "kfree" },
-	{ 0xf9a482f9, "msleep" },
 	{ 0x7c32d0f0, "printk" },
 	{ 0xb1ad28e0, "__gnu_mcount_nc" },
 };
@@ -51,4 +58,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "A853EC363AC5DD5832D9F81");
+MODULE_INFO(srcversion, "B082C5609C5AFFECA640617");

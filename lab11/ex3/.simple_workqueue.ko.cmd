@@ -1,1 +1,0 @@
-cmd_/home/june/class/lab11/ex3/simple_workqueue.ko := /usr/bin/arm-linux-gnueabi-ld -r -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /home/june/class/lab11/ex3/simple_workqueue.ko /home/june/class/lab11/ex3/simple_workqueue.o /home/june/class/lab11/ex3/simple_workqueue.mod.o ;  true

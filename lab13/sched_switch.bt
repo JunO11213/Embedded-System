@@ -1,0 +1,33 @@
+BEGIN
+
+{
+
+    printf("%-15s %-20s %-10s %-18s %-10s %s\n",
+
+           "TIME", "EVENT", "PREV_PID", "PREV_COMM", "NEXT_PID", "NEXT_COMM");
+
+}
+
+tracepoint:sched:sched_switch
+
+/args->prev_comm == "t_app.out" || args->next_comm == "t_app.out"/
+
+{
+
+    printf("%-15s %-20s %-10d %-16s => %-10d %s\n",
+
+           strftime("%H:%M:%S.%f", nsecs),
+
+           "sched_switch",
+
+           args->prev_pid,
+
+           args->prev_comm,
+
+           args->next_pid,
+
+           args->next_comm
+
+    );
+
+}

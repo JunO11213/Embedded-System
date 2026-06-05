@@ -1,0 +1,87 @@
+#!/usr/bin/env bpftrace
+
+BEGIN
+{
+    printf("%-24s %-8s %-16s %-8s %s\n",
+           "EVENT", "PID", "COMM", "RET", "INFO");
+}
+
+/*
+ * open() 내부에서 실제로 호출되는 openat() 시스템 콜 진입 지점
+ */
+tracepoint:syscalls:sys_enter_openat
+/comm == "t_app.out"/
+{
+    printf("%-24s %-8d %-16s %-8s %s\n",
+           "sys_enter_openat",
+           pid,
+           comm,
+           "-",
+           str(args->filename));
+}
+
+/*
+ * openat() 시스템 콜 종료 지점
+ * args->ret은 openat의 반환값이다.
+ * 성공하면 파일 디스크립터(fd), 실패하면 음수 에러 코드가 나온다.
+ */
+tracepoint:syscalls:sys_exit_openat
+/comm == "t_app.out"/
+{
+    printf("%-24s %-8d %-16s %-8d %s\n",
+           "sys_exit_openat",
+           pid,
+           comm,
+           args->ret,
+           "-");
+}
+
+/*
+ * openat() 내부에서 호출되는 커널 함수 vfs_open 진입 지점
+ * 커널 함수 호출 여부를 확인하기 위한 kprobe 예제
+ */
+kprobe:vfs_open
+/comm == "t_app.out"/
+{
+    printf("%-24s %-8d %-16s %-8s %s\n",
+           "kprobe:vfs_open",
+           pid,
+           comm,
+           "-",
+           "vfs_open called");
+}
+
+/*
+ * close() 시스템 콜 진입 지점
+ * args->fd는 닫으려는 파일 디스크립터 번호다.
+ */
+tracepoint:syscalls:sys_enter_close
+/comm == "t_app.out"/
+{
+    printf("%-24s %-8d %-16s %-8s fd=%d\n",
+           "sys_enter_close",
+           pid,
+           comm,
+           "-",
+           args->fd);
+}
+
+/*
+ * close() 시스템 콜 종료 지점
+ * 성공하면 ret = 0, 실패하면 음수 에러 코드가 나온다.
+ */
+tracepoint:syscalls:sys_exit_close
+/comm == "t_app.out"/
+{
+    printf("%-24s %-8d %-16s %-8d %s\n",
+           "sys_exit_close",
+           pid,
+           comm,
+           args->ret,
+           "-");
+}
+
+END
+{
+    printf("Tracing finished.\n");
+}
